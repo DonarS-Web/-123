@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nail Studio | Ковель</title>
+    <style>
+        :root {
+            --pink-light: #fff5f7;
+            --pink-accent: #ffb6c1;
+            --pink-dark: #ff8fa3;
+            --pink-glow: rgba(255, 182, 193, 0.7);
+            --text-dark: #333;
+            --white: #ffffff;
+            --bg-soft: #fff9fa;
+        }
+
+        /* Плавний скрол */
+        html { scroll-behavior: smooth; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background: var(--bg-soft); color: var(--text-dark); overflow-x: hidden; }
+        body.no-scroll { overflow: hidden; height: 100vh; }
+
+        /* --- 1. ЗАСТАВКА З ТЕМНИМ OVERLAY --- */
+        .intro-screen {
+            height: 100vh; width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1610992015732-2449b76344bc?q=80&w=1200') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; position: fixed; top: 0; left: 0; z-index: 9999; transition: 0.8s ease;
+            padding: 20px;
+        }
+
+        .intro-screen h1 {
+            font-size: clamp(1.8rem, 8vw, 3.5rem);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .intro-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        /* КНОПКА З GLOW ТА PULSE */
+        .btn-glow {
+            padding: 18px 45px;
+            background: var(--pink-accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px var(--pink-accent);
+            animation: pulseGlow 2s infinite;
+            transition: 0.3s;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px var(--pink-accent); transform: scale(1); }
+            50% { box-shadow: 0 0 25px var(--pink-dark), 0 0 40px var(--pink-glow); transform: scale(1.05); }
+            100% { box-shadow: 0 0 10px var(--pink-accent); transform: scale(1); }
+        }
+
+        .btn-glow:hover {
+            background: var(--white);
+            color: var(--pink-dark);
+            box-shadow: 0 0 35px var(--white);
+            transform: scale(1.1);
+        }
+
+        /* --- 2. ГОЛОВНИЙ САЙТ --- */
+        #main-site { display: none; opacity: 0; transition: 1s; }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: white; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo { font-weight: 800; color: var(--pink-dark); font-size: 1.4rem; }
+
+        /* ВСТУПНА СЕКЦІЯ З ФОНОМ (PARALLAX) */
+        .hero-main {
+            position: relative;
+            padding: 120px 10%;
+            text-align: center;
+            background: linear-gradient(rgba(255, 245, 247, 0.7), rgba(255, 255, 255, 0.8)), 
+                        url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1200'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            border-radius: 0 0 60px 60px;
+            box-shadow: 0 15px 40px rgba(255, 182, 193, 0.2);
+        }
+
+        .hero-main h2 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            color: var(--pink-dark);
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .hero-main p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        /* Анімація появи секцій */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 1s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* ПОСЛУГИ ТА ЦІНИ */
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; padding: 40px 8%;
+        }
+
+        .service-item {
+            background: white; padding: 25px; border-radius: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border-left: 4px solid var(--pink-accent);
+        }
+
+        .price { font-weight: bold; color: var(--pink-dark); }
+
+        /* ГАЛЕРЕЯ (8 ФОТО) */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px; padding: 20px 8%;
+        }
+
+        .img-container {
+            height: 300px; border-radius: 25px; overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .img-container img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .img-container:hover img { transform: scale(1.15); }
+
+        /* КНОПКА ЗАМОВИТИ */
+        .btn-order {
+            display: block; width: fit-content; margin: 40px auto;
+            padding: 20px 60px; background: var(--pink-dark); color: white;
+            border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
+            transition: 0.4s; box-shadow: 0 10px 20px rgba(255, 143, 163, 0.3);
+        }
+
+        .btn-order:hover { transform: scale(1.1); box-shadow: 0 15px 40px var(--pink-glow); }
+
+        /* --- 3. POPUP GLASS EFFECT --- */
+        .modal {
+            display: none; position: fixed; inset: 0; z-index: 10000;
+            background: rgba(255, 182, 193, 0.1);
+            backdrop-filter: blur(15px);
+            align-items: center; justify-content: center; opacity: 0; transition: 0.4s;
+        }
+
+        .modal.show { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px; border-radius: 40px; text-align: center;
+            width: 90%; max-width: 380px; border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transform: translateY(50px); transition: 0.5s cubic-bezier(0.17, 0.84, 0.44, 1);
+        }
+
+        .modal.show .modal-content { transform: translateY(0); }
+
+        .social-btn {
+            display: block; width: 100%; padding: 16px; margin: 12px 0;
+            border-radius: 20px; text-decoration: none; font-weight: bold; color: white;
+            transition: 0.3s;
+        }
+        .inst { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #bc1888); }
+        .tg { background: #0088cc; }
+
+        /* FOOTER */
+        footer {
+            background: white; padding: 60px 20px; text-align: center;
+            border-top-left-radius: 50px; border-top-right-radius: 50px;
+        }
+
+        .footer-links { margin: 20px 0; color: var(--pink-dark); font-weight: 600; }
+        .footer-links span { margin: 0 10px; color: #ddd; }
+
+        /* АДАПТИВНІСТЬ */
+        @media (max-width: 600px) {
+            nav { padding: 15px 5%; }
+            .hero-main { padding: 80px 5%; }
+            .hero-main h2 { font-size: 1.8rem; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 10px 5%; }
+            .img-container { height: 180px; }
+        }
+    </style>
+</head>
+<body class="no-scroll">
+
+    <div id="intro" class="intro-screen">
+        <h1>Манікюр який підкреслює твій стиль</h1>
+        <p>Швидко • Якісно • Стерильно</p>
+        <button class="btn-glow" onclick="unlockSite()">Увійти на сайт</button>
+    </div>
+
+    <div id="main-site">
+        <nav>
+            <div class="logo">NAIL STUDIO</div>
+            <button onclick="openOrderModal()" style="background:none; border: 1px solid var(--pink-accent); padding: 8px 18px; border-radius: 20px; cursor:pointer; color: var(--pink-dark); font-weight: bold;">Записатись</button>
+        </nav>
+
+        <section class="hero-main reveal">
+            <h2>Професійний догляд за вашими руками</h2>
+            <p>Ми використовуємо лише преміальні матеріали та гарантуємо <strong>100% стерильність</strong> інструментів за медичними стандартами.</p>
+            <div style="margin-top: 25px; color: var(--pink-accent); font-size: 24px;">✦ ✦ ✦</div>
+        </section>
+
+        <section class="reveal">
+            <h2 style="text-align: center; margin: 40px 0 20px; color: var(--pink-dark);">Послуги та ціни</h2>
+            <div class="services-grid">
+                <div class="service-item"><span>Манікюр</span> <span class="price">від 500 грн</span></div>
+                <div class="service-item"><span>Гель-лак</span> <span class="price">від 700 грн</span></div>
+                <div class="service-item"><span>Дизайн</span> <span class="price">від 300 грн</span></div>
+                <div class="service-item"><span>Френч</span> <span class="price">+150 грн</span></div>
+                <div class="service-item"><span>Нарощення</span> <span class="price">від 900 грн</span></div>
+                <div class="service-item"><span>Укріплення</span> <span class="price">від 200 грн</span></div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <h2 style="text-align: center; margin: 40px 0 20px; color: var(--pink-dark);">Наші роботи</h2>
+            <div class="gallery-grid">
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1604902396830-aca29e19b067?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1560869713-7d0a294308b3?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=400"></div>
+                <div class="img-container"><img src="https://images.unsplash.com/photo-1629190842240-349f4370395a?q=80&w=400"></div>
+            </div>
+        </section>
+
+        <div class="reveal" style="text-align: center;">
+            <button class="btn-order" onclick="openOrderModal()">ЗАМОВИТИ ВІЗИТ</button>
+        </div>
+
+        <footer>
+            <div class="logo">NAIL STUDIO</div>
+            <div class="footer-links">
+                Instagram <span>•</span> Telegram <span>•</span> Ковель
+            </div>
+            <p style="color: #bbb; font-size: 0.8rem;">© 2026 Nail Studio. Всі права захищені.</p>
+        </footer>
+    </div>
+
+    <div id="orderModal" class="modal" onclick="closeOrderModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div style="font-size: 40px; margin-bottom: 10px;">✨</div>
+            <h3 style="margin-bottom: 15px; color: var(--text-dark);">Оберіть зручний месенджер</h3>
+            <a href="https://instagram.com/your_profile" class="social-btn inst">INSTAGRAM</a>
+            <a href="https://t.me/your_username" class="social-btn tg">TELEGRAM</a>
+            <button onclick="closeOrderModal()" style="margin-top: 20px; background:none; border:none; color:#aaa; cursor:pointer;">Закрити</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Логіка входу
+        function unlockSite() {
+            const intro = document.getElementById('intro');
+            const mainSite = document.getElementById('main-site');
+            intro.style.opacity = '0';
+            intro.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                intro.remove();
+                mainSite.style.display = 'block';
+                setTimeout(() => { 
+                    mainSite.style.opacity = '1'; 
+                    reveal(); 
+                }, 50);
+                document.body.classList.remove('no-scroll');
+            }, 700);
+        }
+
+        // 2. Логіка появи при скролі
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+
+        // 3. Модальне вікно
+        function openOrderModal() {
+            const m = document.getElementById('orderModal');
+            m.style.display = 'flex';
+            setTimeout(() => m.classList.add('show'), 10);
+        }
+        function closeOrderModal() {
+            const m = document.getElementById('orderModal');
+            m.classList.remove('show');
+            setTimeout(() => m.style.display = 'none', 400);
+        }
+    </script>
+</body>
+</html>
